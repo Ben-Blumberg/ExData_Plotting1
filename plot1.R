@@ -4,11 +4,15 @@ data <- read.csv("household_power_consumption.txt", sep = ";",
 header <- read.csv("household_power_consumption.txt", sep = ";", nrows =1,
                    header=FALSE, na.strings = "?")
 colnames(data) <- unlist(header)
-attach(data)
 
 # Change dates and times to date/time formats
-Date <- as.Date(Date,"%d/%m/%Y")
-Time <- strptime(Time,"%H:%M:%S")
-par(cex=0.8)
+datetime <- strptime(with(data, paste(Date, Time)), "%d/%m/%Y %H:%M:%S")
+data$Date <- NULL
+data$Time <- NULL
+data <- cbind(datetime, data)
+
+
 #plot1
+png("plot1.png", width = 480, height = 480)
 hist(Global_active_power,xlab = "Global Active Power (kilowatts)", col ="red",main="Global Active Power")
+dev.off()

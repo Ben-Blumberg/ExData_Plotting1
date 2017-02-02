@@ -4,14 +4,14 @@ data <- read.csv("household_power_consumption.txt", sep = ";",
 header <- read.csv("household_power_consumption.txt", sep = ";", nrows =1,
                    header=FALSE, na.strings = "?")
 colnames(data) <- unlist(header)
-attach(data)
-par(cex=0.8)
 
 # Change dates and times to date/time formats
-Date <- as.Date(Date,"%d/%m/%Y")
-Time <- strptime(Time,"%H:%M:%S")
+datetime <- strptime(with(data, paste(Date, Time)), "%d/%m/%Y %H:%M:%S")
+data$Date <- NULL
+data$Time <- NULL
+data <- cbind(datetime, data)
 
-#plot2, manually replace x axis with three correcly spaced labels, Thu, Fri, Sat
-plot(Global_active_power, type="l", xaxt = "n",
-     ylab = "Global Active Power (kilowatts)", xlab = "")
-axis(1,at=c(1, (1+length(Date))/2,length(Date)), labels = c("Thu","Fri","Sat"))
+#plot2, 
+png("	plot2.png", width = 480, height = 480)
+plot(datetime,Global_active_power, type="l",ylab = "Global Active Power (kilowatts)", xlab = "")
+dev.off()

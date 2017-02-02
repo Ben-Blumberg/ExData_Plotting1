@@ -4,19 +4,19 @@ data <- read.csv("household_power_consumption.txt", sep = ";",
 header <- read.csv("household_power_consumption.txt", sep = ";", nrows =1,
                    header=FALSE, na.strings = "?")
 colnames(data) <- unlist(header)
-attach(data)
-par(cex=0.8)
+
 
 # Change dates and times to date/time formats
-Date <- as.Date(Date,"%d/%m/%Y")
-Time <- strptime(Time,"%H:%M:%S")
+data$Date <- NULL
+data$Time <- NULL
+data <- cbind(datetime, data)
 
 #plot3 manually create plot with x axis of Thurs, Fri, Sat. Then add lines one by one
 # then place a legend for the lines
-plot(Sub_metering_1, type = "n", ylab = "Energy sub metering", xlab = "", xaxt = "n")
-axis(1,at=c(1, (1+length(Date))/2,length(Date)), labels = c("Thu","Fri","Sat"))
-lines(Sub_metering_1, col = "black")
-lines(Sub_metering_2, col = "red")
-lines(Sub_metering_3, col = "blue")
+png("	plot3.png", width = 480, height = 480)
+plot(datetime, Sub_metering_1, type = "l" , ylab = "Energy sub metering", xlab="")
+lines(datetime, Sub_metering_2, col = "red")
+lines(datetime, Sub_metering_3, col = "blue")
 legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), 
-       lty = c(1,1), col = c("black", "red","blue"), text.width = 800)
+       lty = 1, col = c("black", "red","blue"))
+dev.off()
